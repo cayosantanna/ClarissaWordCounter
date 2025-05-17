@@ -8,7 +8,7 @@ import java.util.concurrent.ExecutionException;
 public class Benchmark {
  
     private static final int EXECUCOES_TOTAIS = 32;
-    private static final int[] THREADS_TESTES = {2, 4, 8};
+    private static final int[] THREADS_TESTES = {2, 4, 8, 16, 32};
     
     private static final Set<String> CONJUNTO1 = new HashSet<>(
             Arrays.asList("clarissa", "letter", "lovelace", "virtue", "dear", "miss"));
@@ -102,14 +102,27 @@ public class Benchmark {
         List<Long> tempos = new ArrayList<>();
         
         for (int i = 0; i < EXECUCOES_TOTAIS; i++) {
-
             long inicio = System.nanoTime();
-
-            ContadorSequencial.contarPalavrasPreProcessadas(palavrasPreProcessadas, conjunto);
-
+            ExecutorService executor = null;
+            try {
+                executor = ContadorSequencial.iniciarProcesso();
+                
+                ContadorSequencial.contarPalavrasPreProcessadas(palavrasPreProcessadas, conjunto);
+                
+            } catch (Exception e) {
+                e.printStackTrace();
+            } finally {
+                if (executor != null) {
+                    try {
+                        ContadorSequencial.encerrarProcesso(executor);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
             long fim = System.nanoTime();
             
-            long tempoDecorrido = (fim - inicio) / 1_000;
+            long tempoDecorrido = (fim - inicio) / 1_000; // duração em microssegundos
             tempos.add(tempoDecorrido);
         }
         
@@ -127,22 +140,16 @@ public class Benchmark {
         List<Long> tempos = new ArrayList<>();
 
         for (int i = 0; i < EXECUCOES_TOTAIS; i++) {
+            long inicio = System.nanoTime();
             ExecutorService executor = null; 
             try {
                 executor = ContadorParalelo.iniciarProcesso(numThreads);
-                long inicio = System.nanoTime();
                 
                 ContadorParalelo.contarPalavrasPreProcessadas(palavrasPreProcessadas, conjunto, executor, numThreads);
-                
-                long fim = System.nanoTime();
-
-                // duração em microssegundos
-                tempos.add((fim - inicio) / 1_000);
                 
             } catch (InterruptedException | ExecutionException e) {
                 e.printStackTrace();
             } finally {
-
                 if (executor != null) {
                     try {
                         ContadorParalelo.encerrarProcesso(executor);
@@ -151,6 +158,10 @@ public class Benchmark {
                     }
                 }
             }
+            long fim = System.nanoTime();
+
+            long tempoDecorrido = (fim - inicio) / 1_000; // duração em microssegundos
+            tempos.add(tempoDecorrido);
         }
 
         return tempos;

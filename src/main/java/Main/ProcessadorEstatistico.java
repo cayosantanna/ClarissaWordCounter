@@ -1,6 +1,7 @@
 package Main; 
 import java.util.*;
 import org.apache.commons.math3.stat.descriptive.rank.Percentile; 
+import org.apache.commons.math3.stat.descriptive.moment.StandardDeviation; // Adicionar importação
 
 public class ProcessadorEstatistico {
     public static final int EXECUCOES_WARMUP = 2;
@@ -79,22 +80,13 @@ public class ProcessadorEstatistico {
     public static double calcularDesvioPadrao(List<Long> tempos) {
         // lista = menos de 2 elementos, desvio = zero
         if (tempos.size() <= 1) return 0;
-        
-        double media = calcularMedia(tempos);
-        
-    
-        double somaDiferencasAoQuadrado = 0;
-        for (Long tempo : tempos) {
-            double diferenca = tempo - media;
-            somaDiferencasAoQuadrado += (diferenca * diferenca);
-        }
-        
-        // variancia = media dos quadrados das diferenças
-        // Usa n-1 (correção de Bessel) para uma estimativa não-enviesada
-        double variancia = somaDiferencasAoQuadrado / (tempos.size() - 1);
-        
-        //raiz quadrada da variância 
-        return Math.sqrt(variancia);
+
+        // Conversão de Long para array de double
+        double[] temposArray = tempos.stream().mapToDouble(Long::doubleValue).toArray();
+
+        // Usar a classe StandardDeviation da biblioteca Apache Commons Math
+        StandardDeviation standardDeviation = new StandardDeviation();
+        return standardDeviation.evaluate(temposArray);
     }
 
     
