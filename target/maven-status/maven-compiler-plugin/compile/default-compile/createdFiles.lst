@@ -1,8 +1,8 @@
-Main/Main.class
-Main/ContadorParalelo.class
-Main/ContadorSequencial.class
-Main/LeitorArquivo.class
-Main/ProcessadorEstatistico.class
-Main/ProcessadorTexto.class
-Main/Benchmark.class
-Main/Benchmark$ResultadoTeste.class
+Main\ProcessadorTexto.class
+Main\ContadorParalelo.class
+Main\ContadorSequencial.class
+Main\Benchmark$ResultadoTeste.class
+Main\Benchmark.class
+Main\LeitorArquivo.class
+Main\Main.class
+Main\ProcessadorEstatistico.class
