@@ -1,7 +1,0 @@
-Main\ClarissaWordCounterSPD.class
-leitor\LeitorDeTexto.class
-contadores\ContadorParalelo.class
-contadores\ContadorSequencial.class
-testador\Testador.class
-processo\ProcessoSequencial.class
-processo\ProcessoParalelo.class
